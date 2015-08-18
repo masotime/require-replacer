@@ -17,7 +17,7 @@ Then in your `index.js`:
 ```
 var replacer = require('require-replacer');
 
-replacer(function around(methodCall) { 
+replacer.replace(function around(methodCall) { 
 	return 'Hello ' + methodCall.proceed();
 }, './lib/test');
 
@@ -37,7 +37,7 @@ module.exports = {
 Then instead
 
 ```
-replacer(function around(methodCall) { ...}, './lib/test', 'worldFn');
+replacer.replace(function around(methodCall) { ...}, './lib/test', 'worldFn');
 ```
 
 ## Caveats

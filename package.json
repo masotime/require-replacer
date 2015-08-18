@@ -1,6 +1,6 @@
 {
   "name": "require-replacer",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Replaces functions from require",
   "main": "index.js",
   "scripts": {
