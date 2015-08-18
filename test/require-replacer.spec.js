@@ -1,8 +1,7 @@
 'use strict';
 
 var replacer = require('../.'),
-	assert = require('assert'),
-	path = require('path');
+	assert = require('assert');
 
 describe('require-replacer', function () {
 
