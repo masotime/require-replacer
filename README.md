@@ -40,6 +40,26 @@ Then instead
 replacer.replace(function around(methodCall) { ...}, './lib/test', 'worldFn');
 ```
 
+If your module exports a constructor, then you may write an interceptor in the following manner e.g:
+
+```
+function alterConstructorAdvice(methodCall) {
+	methodCall.proceed();
+
+	this.name = 'Hello ' + this.name;
+
+	// override prototype
+	var originalGetName = this.getName.bind(this);
+	this.getName = function () {
+		return originalGetName() + 'PINEAPPLE TARTS MUHAHAHAHA';
+	};
+
+	return this;
+}
+```
+
+Note that you _must_ return an object for the advice, which is usually `this`.
+
 ## Caveats
 
 This won't work if you require the module before replacing it.

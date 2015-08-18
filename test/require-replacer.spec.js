@@ -13,8 +13,23 @@ describe('require-replacer', function () {
 		return 'pineapple';
 	}
 
+	function alterConstructorAdvice(methodCall) {
+		methodCall.proceed();
+
+		this.name = 'Hello ' + this.name;
+
+		// override prototype
+		var originalGetName = this.getName.bind(this);
+		this.getName = function () {
+			return originalGetName() + 'PINEAPPLE TARTS MUHAHAHAHA';
+		};
+
+		return this;
+	}
+
 	var functionExportProp = './props/function-export',
-		objectExportProp = './props/object-export';
+		objectExportProp = './props/object-export',
+		constructorExportProp = './props/constructor-export';
 
 	it('should correctly replace a function export', function () {
 		replacer.replace(addHelloAdvice, functionExportProp);
@@ -30,6 +45,16 @@ describe('require-replacer', function () {
 		replacer.replace(getPineappleAdvice, 'fs', 'readFile');
 
 		assert.equal(require('fs').readFile(), 'pineapple');
+	});
+
+	it('should correctly advise a constructor', function () {
+		replacer.replace(alterConstructorAdvice, constructorExportProp);
+
+		var World = require(constructorExportProp);
+		var newWorld = new World();
+
+		assert.equal(newWorld.name, 'Hello world');
+		assert.equal(newWorld.getName(), 'Hello worldPINEAPPLE TARTS MUHAHAHAHA');
 	});
 
 	it('should NOT work if the require doesn\'t exist', function () {
