@@ -22,7 +22,7 @@ replacer.replace(function around(methodCall) {
 	return 'Hello ' + methodCall.proceed();
 }, './lib/test');
 
-require('./lib/test')(); // 'Helo world'
+require('./lib/test')(); // 'Hello world'
 ```
 
 ### Object export
@@ -43,7 +43,19 @@ replacer.replace(function around(methodCall) { ...}, './lib/test', 'worldFn');
 ```
 
 ### Constructor export
-If your module exports a constructor, then you may write an interceptor in the following manner e.g:
+If your module exports a constructor, e.g.
+
+```
+function World() {
+	this.name = 'world';
+}
+
+World.prototype.getName = function() {
+	return this.name;
+};
+```
+
+then you may write an interceptor in the following manner e.g:
 
 ```
 function alterConstructorAdvice(methodCall) {
@@ -59,6 +71,9 @@ function alterConstructorAdvice(methodCall) {
 
 	return this;
 }
+
+replacer.replace(alterConstructorAdvice, './World');
+new require('./World')().getName(); // 'Hello worldPINEAPPLE TARTS MUHAHAHAHA'
 ```
 
 Note that you _must_ return an object for the advice, which is usually `this`.
@@ -71,4 +86,13 @@ In particular, be aware that if you have module A that depends on module B, repl
 
 This can be resolved if you do things in the correct order, i.e. replace the child dependency function before replacing the parent. In the future, perhaps this module will have some wizardry to detect and resolve this, but I doubt it.
 
+## References
+
+* [Hacking Node Require][2]
+* [node-mocked][3]
+* [module.js source][4]
+
 [1]: https://github.com/cujojs/meld
+[2]: http://bahmutov.calepin.co/hacking-node-require.html
+[3]: https://github.com/konobi/node-mocked/blob/master/lib/index.js
+[4]: https://github.com/joyent/node/blob/master/lib/module.js
