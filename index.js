@@ -5,13 +5,13 @@ var Module = require('module'),
 	path = require('path'),
 	meld = require('meld');
 
-function load(path) {
+function load(requirePath) {
 	var module, result = {
-		path: path
+		path: requirePath
 	};
 
 	try {
-		module = require(path);
+		module = require(requirePath);
 	} catch (e) {
 		if (e.code === 'MODULE_NOT_FOUND') {
 			result.error = 'Unable to locate the module. Is the path right?';
@@ -53,7 +53,9 @@ module.exports = {
 	replace: function replace(aroundFn, requirePath, property) {
 		var module, theKey, resolvedPath, isRelativeModule;
 
-		isRelativeModule = ['.', '/'].some(function (starter) { return requirePath[0] === starter; });
+		isRelativeModule = ['.', '/'].some(function (relPathFirstChar) {
+			return requirePath && requirePath[0] === relPathFirstChar;
+		});
 
 		// get the caller's filename, get the directory of that, resolve against the require path.
 		resolvedPath = isRelativeModule ? path.resolve(path.dirname(callsite()[1].getFileName()), requirePath) : requirePath;
@@ -68,7 +70,7 @@ module.exports = {
 					return Module._cache[key].exports === module;
 				})[0];
 
-			// meld has to be applied in context of the obejct holding the function,
+			// meld has to be applied in context of the object holding the function,
 			// it cannot be applied to the function without a context.
 			meld.around(Module._cache[theKey], 'exports', aroundFn);
 		} else {

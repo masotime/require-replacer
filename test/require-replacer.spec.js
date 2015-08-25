@@ -68,4 +68,16 @@ describe('require-replacer', function () {
 			replacer.replace(getPineappleAdvice, objectExportProp, 'notafunction');
 		}, /Attempt to replace a require that is not a function/);
 	});
+
+	it('should NOT work if the path is not specified', function () {
+		assert.throws( function() {
+			replacer.replace(getPineappleAdvice);
+		}, /missing path/);
+	});
+
+	it('should NOT work if the path is not a string', function () {
+		assert.throws( function() {
+			replacer.replace(getPineappleAdvice, 123);
+		}, /path must be a string/);
+	});
 });
