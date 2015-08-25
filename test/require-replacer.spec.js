@@ -60,7 +60,7 @@ describe('require-replacer', function () {
 	it('should NOT work if the require doesn\'t exist', function () {
 		assert.throws( function() {
 			replacer.replace(addHelloAdvice, 'does-not-exist');
-		}, /Attempt to replace a require that is not a function/);
+		}, /Unable to locate the module\. Is the path right\?/);
 	});
 
 	it('should NOT work if the require is not a function', function() {
