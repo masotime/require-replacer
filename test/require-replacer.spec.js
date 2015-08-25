@@ -66,7 +66,7 @@ describe('require-replacer', function () {
 	it('should NOT work if the require is not a function', function() {
 		assert.throws( function() {
 			replacer.replace(getPineappleAdvice, objectExportProp, 'notafunction');
-		}, /Attempt to replace a require that is not a function/);
+		}, /Attempt to replace require\([^\)]+\) which is not a function\! \([^\)]+\)/);
 	});
 
 	it('should NOT work if the path is not specified', function () {
